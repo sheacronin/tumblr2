@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import './App.css';
 import StyledHeader from './components/Header';
@@ -9,8 +10,9 @@ const PostsContainer = styled.main`
 
 function App(props) {
     const { className } = props;
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    return (
+    const app = isLoggedIn ? (
         <div id="app" className={className}>
             <StyledHeader />
             <PostsContainer>
@@ -18,7 +20,13 @@ function App(props) {
                 <StyledPost />
             </PostsContainer>
         </div>
+    ) : (
+        <div id="app" className={className}>
+            <button>Log in</button>
+        </div>
     );
+
+    return app;
 }
 
 export default App;
