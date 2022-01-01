@@ -6,8 +6,8 @@ import styled from 'styled-components';
 const StyledApp = styled(App)`
     background-color: #001936;
     width: 100vw;
-    height: 100vh;
 `;
+// height 100vh?
 
 ReactDOM.render(
     <React.StrictMode>

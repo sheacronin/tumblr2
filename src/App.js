@@ -1,8 +1,12 @@
-import { useState } from 'react';
+import { onAuthStateChanged, getAuth } from 'firebase/auth';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import './App.css';
 import StyledHeader from './components/Header';
 import StyledPost from './components/Post';
+import SignOutButton from './components/SignOutButton';
+import SignUp from './components/SignUp';
+import app from './firebase';
 
 const PostsContainer = styled.main`
     margin-top: 40px;
@@ -10,23 +14,32 @@ const PostsContainer = styled.main`
 
 function App(props) {
     const { className } = props;
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [currentUser, setCurrentUser] = useState(null);
+    console.log('current user', currentUser);
 
-    const app = isLoggedIn ? (
+    useEffect(() => {
+        onAuthStateChanged(getAuth(), setCurrentUser);
+    }, []);
+
+    const content =
+        currentUser !== null ? (
+            <section>
+                <PostsContainer>
+                    <StyledPost />
+                    <StyledPost />
+                </PostsContainer>
+                <SignOutButton />
+            </section>
+        ) : (
+            <SignUp />
+        );
+
+    return (
         <div id="app" className={className}>
             <StyledHeader />
-            <PostsContainer>
-                <StyledPost />
-                <StyledPost />
-            </PostsContainer>
-        </div>
-    ) : (
-        <div id="app" className={className}>
-            <button>Log in</button>
+            {content}
         </div>
     );
-
-    return app;
 }
 
 export default App;
