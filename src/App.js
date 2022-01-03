@@ -11,6 +11,7 @@ import SignUp from './components/SignUp';
 import SignUpOrLogin from './components/SignUpOrLogIn';
 import Sidebar from './components/Sidebar';
 import app from './firebase';
+import NewPost from './components/NewPost';
 
 const PostsContainer = styled.main`
     margin-top: 40px;
@@ -53,6 +54,7 @@ function App(props) {
                     <Route exact path="/" element={content} />
                     <Route exact path="/register" element={<SignUp />} />
                     <Route exact path="/login" element={<LogIn />} />
+                    <Route exact path="/new" element={<NewPost />} />
                 </Routes>
             </div>
         </Router>

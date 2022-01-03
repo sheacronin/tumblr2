@@ -8,6 +8,7 @@ const StyledNav = styled.nav`
     position: absolute;
     background-color: #001936;
     color: white;
+    margin-top: 44px;
 
     ul li {
         list-style-type: none;
