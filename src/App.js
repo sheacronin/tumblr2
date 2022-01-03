@@ -21,6 +21,8 @@ function App(props) {
     const [currentUser, setCurrentUser] = useState(null);
     console.log('current user', currentUser);
 
+    const [isSidebarShowing, setIsSideBarShowing] = useState(false);
+
     useEffect(() => {
         onAuthStateChanged(getAuth(), setCurrentUser);
     }, []);
@@ -41,8 +43,12 @@ function App(props) {
     return (
         <Router>
             <div id="app" className={className}>
-                <StyledHeader />
-                <Sidebar />
+                <StyledHeader
+                    onHamburgerClick={() =>
+                        setIsSideBarShowing((prevState) => !prevState)
+                    }
+                />
+                {isSidebarShowing && <Sidebar />}
                 <Routes>
                     <Route exact path="/" element={content} />
                     <Route exact path="/register" element={<SignUp />} />
