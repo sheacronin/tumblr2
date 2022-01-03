@@ -1,11 +1,13 @@
 import { onAuthStateChanged, getAuth } from 'firebase/auth';
 import { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import styled from 'styled-components';
 import './App.css';
 import StyledHeader from './components/Header';
 import StyledPost from './components/Post';
 import SignOutButton from './components/SignOutButton';
 import SignUp from './components/SignUp';
+import SignUpOrLogin from './components/SignUpOrLogIn';
 import app from './firebase';
 
 const PostsContainer = styled.main`
@@ -31,14 +33,19 @@ function App(props) {
                 <SignOutButton />
             </section>
         ) : (
-            <SignUp />
+            <SignUpOrLogin />
         );
 
     return (
-        <div id="app" className={className}>
-            <StyledHeader />
-            {content}
-        </div>
+        <Router>
+            <div id="app" className={className}>
+                <StyledHeader />
+                <Routes>
+                    <Route exact path="/" element={content} />
+                    <Route exact path="/register" element={<SignUp />} />
+                </Routes>
+            </div>
+        </Router>
     );
 }
 
