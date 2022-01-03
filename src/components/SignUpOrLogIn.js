@@ -33,6 +33,7 @@ const LogInButton = styled.button`
     height: 44px;
     margin-top: 12px;
     font-weight: 700;
+    width: 300px;
 `;
 
 function SignUpOrLogIn() {
@@ -46,7 +47,9 @@ function SignUpOrLogIn() {
                 <Link to="/register">
                     <SignUpButton />
                 </Link>
-                <LogInButton>Log in</LogInButton>
+                <Link to="/login">
+                    <LogInButton>Log in</LogInButton>
+                </Link>
             </ButtonsDiv>
         </StyledSection>
     );

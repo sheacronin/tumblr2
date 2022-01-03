@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import styled from 'styled-components';
 import './App.css';
 import StyledHeader from './components/Header';
+import LogIn from './components/LogIn';
 import StyledPost from './components/Post';
 import SignOutButton from './components/SignOutButton';
 import SignUp from './components/SignUp';
@@ -43,6 +44,7 @@ function App(props) {
                 <Routes>
                     <Route exact path="/" element={content} />
                     <Route exact path="/register" element={<SignUp />} />
+                    <Route exact path="/login" element={<LogIn />} />
                 </Routes>
             </div>
         </Router>
