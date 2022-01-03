@@ -9,6 +9,7 @@ import StyledPost from './components/Post';
 import SignOutButton from './components/SignOutButton';
 import SignUp from './components/SignUp';
 import SignUpOrLogin from './components/SignUpOrLogIn';
+import Sidebar from './components/Sidebar';
 import app from './firebase';
 
 const PostsContainer = styled.main`
@@ -41,6 +42,7 @@ function App(props) {
         <Router>
             <div id="app" className={className}>
                 <StyledHeader />
+                <Sidebar />
                 <Routes>
                     <Route exact path="/" element={content} />
                     <Route exact path="/register" element={<SignUp />} />
