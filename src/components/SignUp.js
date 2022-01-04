@@ -6,8 +6,8 @@ import {
     updateProfile,
 } from 'firebase/auth';
 import SignUpButton from './SignUpButton';
-import app from '../firebase';
 import Logo from './Logo';
+import { useNavigate } from 'react-router-dom';
 
 const StyledSection = styled.section`
     width: 100vw;
@@ -33,6 +33,8 @@ const StyledInput = styled.input`
 `;
 
 function SignUp() {
+    const navigate = useNavigate();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [blogName, setBlogName] = useState('');
@@ -48,8 +50,12 @@ function SignUp() {
             .then((userCredential) => {
                 // Signed in
                 const user = userCredential.user;
-                updateProfile(user, { displayName: blogName });
-                // ...
+                updateProfile(user, {
+                    displayName: blogName,
+                    photoURL: '../img/default-profile-pic.png',
+                });
+
+                navigate('/dashboard');
             })
             .catch((error) => {
                 const errorCode = error.code;

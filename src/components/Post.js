@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import BlogInfo from './BlogInfo';
 
 const StyledPost = styled(Post)`
     background-color: white;
@@ -15,7 +16,10 @@ function Post(props) {
 
     return (
         <article className={className}>
-            <div>{post.author}</div>
+            <BlogInfo
+                blogName={post.authorName}
+                profilePhotoURL={post.authorPhotoURL}
+            />
             <div>{post.content}</div>
             <div>tags</div>
             <div>like, reblog, etc</div>

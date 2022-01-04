@@ -1,9 +1,13 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import BlogInfo from './BlogInfo';
-import { collection, addDoc, getFirestore } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
-import app from '../firebase';
+import {
+    collection,
+    addDoc,
+    getFirestore,
+    setDoc,
+    doc,
+} from 'firebase/firestore';
 
 const NewPostContainer = styled.div`
     background-color: white;
@@ -72,15 +76,18 @@ function NewPost(props) {
 
         console.log(currentUser);
 
-        const docRef = await addDoc(
-            collection(db, `users/${currentUser.uid}/posts`),
-            {
-                content: postContent,
-                author: currentUser.uid,
-                reblogs: [],
-                likes: [],
-            }
-        );
+        await setDoc(doc(db, 'users', currentUser.uid), {
+            id: currentUser.id,
+        });
+
+        await addDoc(collection(db, `users/${currentUser.uid}/posts`), {
+            content: postContent,
+            authorId: currentUser.uid,
+            authorName: currentUser.displayName,
+            authorPhotoURL: currentUser.photoURL,
+            reblogs: [],
+            likes: [],
+        });
     }
 
     return (
@@ -98,7 +105,10 @@ function NewPost(props) {
                 </CloseButton>
                 <PostButton onClick={onPostButtonClicked}>Post</PostButton>
             </PostButtonsContainer>
-            <BlogInfo />
+            <BlogInfo
+                blogName={currentUser.displayName}
+                profilePhotoURL={currentUser.profilePhotoURL}
+            />
             <PostTextarea
                 value={postContent}
                 onChange={onPostContentChanged}

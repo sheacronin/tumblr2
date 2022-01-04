@@ -1,8 +1,10 @@
-function BlogInfo() {
+function BlogInfo(props) {
+    const { blogName, profilePhotoURL } = props;
+
     return (
         <div>
-            <img src="#" />
-            blogname
+            <img src={profilePhotoURL} alt={`${blogName}'s profile`} />
+            <span>{blogName}</span>
         </div>
     );
 }

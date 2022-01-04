@@ -13,6 +13,7 @@ import Sidebar from './components/Sidebar';
 import app from './firebase';
 import NewPost from './components/NewPost';
 import Dashboard from './components/Dashboard';
+import Explore from './components/Explore';
 
 const PostsContainer = styled.main`
     margin-top: 40px;
@@ -23,7 +24,7 @@ function App(props) {
     const [currentUser, setCurrentUser] = useState(null);
     console.log('current user', currentUser);
 
-    const [isSidebarShowing, setIsSideBarShowing] = useState(false);
+    const [isSidebarShowing, setIsSidebarShowing] = useState(false);
 
     useEffect(() => {
         onAuthStateChanged(getAuth(), setCurrentUser);
@@ -40,11 +41,15 @@ function App(props) {
         <Router>
             <div id="app" className={className}>
                 <StyledHeader
-                    onHamburgerClick={() =>
-                        setIsSideBarShowing((prevState) => !prevState)
-                    }
+                    onHamburgerClick={() => {
+                        if (currentUser !== null) {
+                            setIsSidebarShowing((prevState) => !prevState);
+                        }
+                    }}
                 />
-                {isSidebarShowing && <Sidebar />}
+                {isSidebarShowing && (
+                    <Sidebar setIsShowing={setIsSidebarShowing} />
+                )}
                 <Routes>
                     <Route exact path="/" element={content} />
                     <Route
@@ -59,6 +64,7 @@ function App(props) {
                         path="/new"
                         element={<NewPost currentUser={currentUser} />}
                     />
+                    <Route exact path="/explore" element={<Explore />} />
                 </Routes>
             </div>
         </Router>
