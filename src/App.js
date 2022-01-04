@@ -54,7 +54,11 @@ function App(props) {
                     <Route exact path="/" element={content} />
                     <Route exact path="/register" element={<SignUp />} />
                     <Route exact path="/login" element={<LogIn />} />
-                    <Route exact path="/new" element={<NewPost />} />
+                    <Route
+                        exact
+                        path="/new"
+                        element={<NewPost currentUser={currentUser} />}
+                    />
                 </Routes>
             </div>
         </Router>

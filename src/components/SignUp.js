@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    updateProfile,
+} from 'firebase/auth';
 import SignUpButton from './SignUpButton';
 import app from '../firebase';
 import Logo from './Logo';
@@ -44,6 +48,7 @@ function SignUp() {
             .then((userCredential) => {
                 // Signed in
                 const user = userCredential.user;
+                updateProfile(user, { displayName: blogName });
                 // ...
             })
             .catch((error) => {
