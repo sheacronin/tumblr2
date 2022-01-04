@@ -11,12 +11,12 @@ const StyledPost = styled(Post)`
 `;
 
 function Post(props) {
-    const { className } = props;
+    const { className, post } = props;
 
     return (
         <article className={className}>
-            <div>username</div>
-            <div>Hello World</div>
+            <div>{post.author}</div>
+            <div>{post.content}</div>
             <div>tags</div>
             <div>like, reblog, etc</div>
         </article>

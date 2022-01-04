@@ -12,6 +12,7 @@ import SignUpOrLogin from './components/SignUpOrLogIn';
 import Sidebar from './components/Sidebar';
 import app from './firebase';
 import NewPost from './components/NewPost';
+import Dashboard from './components/Dashboard';
 
 const PostsContainer = styled.main`
     margin-top: 40px;
@@ -30,13 +31,7 @@ function App(props) {
 
     const content =
         currentUser !== null ? (
-            <section>
-                <PostsContainer>
-                    <StyledPost />
-                    <StyledPost />
-                </PostsContainer>
-                <SignOutButton />
-            </section>
+            <Dashboard currentUser={currentUser} />
         ) : (
             <SignUpOrLogin />
         );
@@ -52,6 +47,11 @@ function App(props) {
                 {isSidebarShowing && <Sidebar />}
                 <Routes>
                     <Route exact path="/" element={content} />
+                    <Route
+                        exact
+                        path="/dashboard"
+                        element={<Dashboard currentUser={currentUser} />}
+                    />
                     <Route exact path="/register" element={<SignUp />} />
                     <Route exact path="/login" element={<LogIn />} />
                     <Route
