@@ -12,13 +12,15 @@ const StyledPost = styled(Post)`
 `;
 
 function Post(props) {
-    const { className, post } = props;
+    const { className, post, currentUser } = props;
 
     return (
         <article className={className}>
             <BlogInfo
                 blogName={post.authorName}
                 profilePhotoURL={post.authorPhotoURL}
+                userId={post.authorId}
+                currentUserId={currentUser.uid}
             />
             <div>{post.content}</div>
             <div>tags</div>

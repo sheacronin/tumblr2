@@ -7,7 +7,9 @@ const PostsContainer = styled.main`
     margin-top: 44px;
 `;
 
-function Explore() {
+function Explore(props) {
+    const { currentUser } = props;
+
     const [explorePosts, setExplorePosts] = useState([]);
 
     useEffect(() => {
@@ -42,7 +44,11 @@ function Explore() {
     return (
         <PostsContainer>
             {explorePosts.map((post) => (
-                <StyledPost key={post.id} post={post} />
+                <StyledPost
+                    key={post.id}
+                    post={post}
+                    currentUser={currentUser}
+                />
             ))}
         </PostsContainer>
     );

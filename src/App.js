@@ -64,7 +64,11 @@ function App(props) {
                         path="/new"
                         element={<NewPost currentUser={currentUser} />}
                     />
-                    <Route exact path="/explore" element={<Explore />} />
+                    <Route
+                        exact
+                        path="/explore"
+                        element={<Explore currentUser={currentUser} />}
+                    />
                 </Routes>
             </div>
         </Router>
