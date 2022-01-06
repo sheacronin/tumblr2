@@ -7,6 +7,7 @@ import {
 } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const FollowButton = styled.button`
     color: #00b8ff;
@@ -42,8 +43,10 @@ function BlogInfo(props) {
 
     return (
         <div>
-            <img src={profilePhotoURL} alt={`${blogName}'s profile`} />
-            <span>{blogName}</span>
+            <Link to={`/blog/${blogName}`}>
+                <img src={profilePhotoURL} alt={`${blogName}'s profile`} />
+                <span>{blogName}</span>
+            </Link>
             {!isFollowed && (
                 <FollowButton onClick={followUser}>Follow</FollowButton>
             )}

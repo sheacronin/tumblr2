@@ -8,6 +8,8 @@ import {
 import SignUpButton from './SignUpButton';
 import Logo from './Logo';
 import { useNavigate } from 'react-router-dom';
+import defaultProfilePhoto from '../img/default-profile-pic.png';
+import { doc, getFirestore, setDoc } from 'firebase/firestore';
 
 const StyledSection = styled.section`
     width: 100vw;
@@ -52,10 +54,17 @@ function SignUp() {
                 const user = userCredential.user;
                 updateProfile(user, {
                     displayName: blogName,
-                    photoURL: '../img/default-profile-pic.png',
+                    photoURL: defaultProfilePhoto,
                 });
 
-                navigate('/dashboard');
+                const db = getFirestore();
+                setDoc(doc(db, `users/${user.uid}`), {
+                    id: user.uid,
+                    blogName: blogName,
+                    photoURL: defaultProfilePhoto,
+                    following: [],
+                    likes: [],
+                }).then(() => navigate('/dashboard'));
             })
             .catch((error) => {
                 const errorCode = error.code;

@@ -1,12 +1,14 @@
 import { onAuthStateChanged, getAuth } from 'firebase/auth';
 import { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import styled from 'styled-components';
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    Navigate,
+} from 'react-router-dom';
 import './App.css';
 import StyledHeader from './components/Header';
 import LogIn from './components/LogIn';
-import StyledPost from './components/Post';
-import SignOutButton from './components/SignOutButton';
 import SignUp from './components/SignUp';
 import SignUpOrLogin from './components/SignUpOrLogIn';
 import Sidebar from './components/Sidebar';
@@ -14,10 +16,7 @@ import app from './firebase';
 import NewPost from './components/NewPost';
 import Dashboard from './components/Dashboard';
 import Explore from './components/Explore';
-
-const PostsContainer = styled.main`
-    margin-top: 40px;
-`;
+import BlogPage from './components/BlogPage';
 
 function App(props) {
     const { className } = props;
@@ -51,7 +50,17 @@ function App(props) {
                     <Sidebar setIsShowing={setIsSidebarShowing} />
                 )}
                 <Routes>
-                    <Route exact path="/" element={content} />
+                    <Route
+                        exact
+                        path="/"
+                        element={
+                            currentUser !== null ? (
+                                <Navigate to="/dashboard" />
+                            ) : (
+                                <SignUpOrLogin />
+                            )
+                        }
+                    />
                     <Route
                         exact
                         path="/dashboard"
@@ -69,6 +78,7 @@ function App(props) {
                         path="/explore"
                         element={<Explore currentUser={currentUser} />}
                     />
+                    <Route path="/blog/:blogName" element={<BlogPage />} />
                 </Routes>
             </div>
         </Router>
