@@ -1,5 +1,19 @@
-import { doc, getDoc, getFirestore } from 'firebase/firestore';
+import {
+    arrayUnion,
+    doc,
+    getDoc,
+    getFirestore,
+    updateDoc,
+} from 'firebase/firestore';
 import { useEffect, useState } from 'react';
+import styled from 'styled-components';
+
+const FollowButton = styled.button`
+    color: #00b8ff;
+    margin-left: 7px;
+    background: none;
+    border: none;
+`;
 
 function BlogInfo(props) {
     const { blogName, profilePhotoURL, userId, currentUserId } = props;
@@ -19,11 +33,20 @@ function BlogInfo(props) {
         }
     }, [currentUserId, userId]);
 
+    async function followUser() {
+        const db = getFirestore();
+        updateDoc(doc(db, `users/${currentUserId}`), {
+            followedIds: arrayUnion(userId),
+        });
+    }
+
     return (
         <div>
             <img src={profilePhotoURL} alt={`${blogName}'s profile`} />
             <span>{blogName}</span>
-            {!isFollowed && <span>Follow</span>}
+            {!isFollowed && (
+                <FollowButton onClick={followUser}>Follow</FollowButton>
+            )}
         </div>
     );
 }
