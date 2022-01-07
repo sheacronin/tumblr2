@@ -62,7 +62,7 @@ function SignUp() {
                     id: user.uid,
                     blogName: blogName,
                     photoURL: defaultProfilePhoto,
-                    following: [],
+                    following: [user.uid],
                     likes: [],
                 }).then(() => navigate('/dashboard'));
             })

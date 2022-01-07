@@ -43,8 +43,9 @@ function BlogInfo(props) {
     async function followUser() {
         const db = getFirestore();
         updateDoc(doc(db, `users/${currentUserId}`), {
-            followedIds: arrayUnion(userId),
+            following: arrayUnion(userId),
         });
+        setIsFollowed(true);
     }
 
     return (
