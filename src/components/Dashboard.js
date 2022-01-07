@@ -1,11 +1,4 @@
-import { getAuth } from 'firebase/auth';
-import {
-    collection,
-    getDocs,
-    getFirestore,
-    query,
-    where,
-} from 'firebase/firestore';
+import { collection, getDocs, getFirestore } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import StyledPost from './Post';
@@ -23,6 +16,8 @@ function Dashboard(props) {
         getDashboardPosts().then((posts) => setDashboardPosts(posts));
 
         async function getDashboardPosts() {
+            if (currentUser === null) return [];
+
             const db = getFirestore();
 
             const currentUserId = currentUser.uid;
@@ -40,18 +35,19 @@ function Dashboard(props) {
             const ownPosts = [];
             ownPostsSnapshot.forEach((doc) => ownPosts.push(doc.data()));
 
-            console.log(ownPosts);
             return ownPosts;
         }
     }, [currentUser]);
-
-    console.log(dashboardPosts);
 
     return (
         <section>
             <PostsContainer>
                 {dashboardPosts.map((post) => (
-                    <StyledPost key={post.id} post={post} />
+                    <StyledPost
+                        key={post.id}
+                        post={post}
+                        currentUser={currentUser}
+                    />
                 ))}
             </PostsContainer>
         </section>

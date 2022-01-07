@@ -1,3 +1,6 @@
+import { doc, getDoc, getFirestore } from 'firebase/firestore';
+import { useEffect } from 'react';
+import { useState } from 'react/cjs/react.development';
 import styled from 'styled-components';
 import BlogInfo from './BlogInfo';
 
@@ -13,13 +16,26 @@ const StyledPost = styled(Post)`
 
 function Post(props) {
     const { className, post, currentUser } = props;
+    const [author, setAuthor] = useState('loading');
+
+    useEffect(() => {
+        getPostAuthor().then((postAuthor) => setAuthor(postAuthor));
+
+        async function getPostAuthor() {
+            const db = getFirestore();
+            const postAuthor = await getDoc(doc(db, `users/${post.authorId}`));
+            return postAuthor.data();
+        }
+    }, [post.authorId]);
+
+    if (author === 'loading') return <div>Loading...</div>;
 
     return (
         <article className={className}>
             <BlogInfo
-                blogName={post.authorName}
-                profilePhotoURL={post.authorPhotoURL}
-                userId={post.authorId}
+                blogName={author.blogName}
+                profilePhotoURL={author.photoURL}
+                userId={author.id}
                 currentUserId={currentUser.uid}
             />
             <div>{post.content}</div>

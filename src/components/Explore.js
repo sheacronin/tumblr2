@@ -30,7 +30,6 @@ function Explore(props) {
                 );
 
                 postsSnapshot.forEach((post) => {
-                    console.log(post.data());
                     posts.push(post.data());
                 });
             }
@@ -45,9 +44,9 @@ function Explore(props) {
         <PostsContainer>
             {explorePosts.map((post) => (
                 <StyledPost
-                    key={post.id}
                     post={post}
                     currentUser={currentUser}
+                    key={post.id}
                 />
             ))}
         </PostsContainer>

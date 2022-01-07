@@ -1,13 +1,8 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import BlogInfo from './BlogInfo';
-import {
-    collection,
-    addDoc,
-    getFirestore,
-    setDoc,
-    doc,
-} from 'firebase/firestore';
+import { getFirestore, setDoc, doc } from 'firebase/firestore';
+import uniqid from 'uniqid';
 
 const NewPostContainer = styled.div`
     background-color: white;
@@ -69,24 +64,20 @@ function NewPost(props) {
         setCurrentTag(e.target.value);
     }
 
-    async function onPostButtonClicked(e) {
+    async function onPostButtonClicked() {
         const db = getFirestore();
 
         console.log('posting...');
 
-        console.log(currentUser);
-
-        await setDoc(doc(db, 'users', currentUser.uid), {
-            id: currentUser.id,
-        });
-
-        await addDoc(collection(db, `users/${currentUser.uid}/posts`), {
+        const postId = uniqid();
+        await setDoc(doc(db, `users/${currentUser.uid}/posts/${postId}`), {
             content: postContent,
             authorId: currentUser.uid,
             authorName: currentUser.displayName,
             authorPhotoURL: currentUser.photoURL,
             reblogs: [],
             likes: [],
+            id: postId,
         });
     }
 
@@ -105,10 +96,16 @@ function NewPost(props) {
                 </CloseButton>
                 <PostButton onClick={onPostButtonClicked}>Post</PostButton>
             </PostButtonsContainer>
-            <BlogInfo
-                blogName={currentUser.displayName}
-                profilePhotoURL={currentUser.profilePhotoURL}
-            />
+            {currentUser !== null ? (
+                <BlogInfo
+                    blogName={currentUser.displayName}
+                    profilePhotoURL={currentUser.profilePhotoURL}
+                    currentUserId={currentUser.uid}
+                    userId={currentUser.uid}
+                />
+            ) : (
+                <div>Loading...</div>
+            )}
             <PostTextarea
                 value={postContent}
                 onChange={onPostContentChanged}

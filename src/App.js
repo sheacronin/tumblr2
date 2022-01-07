@@ -12,11 +12,12 @@ import LogIn from './components/LogIn';
 import SignUp from './components/SignUp';
 import SignUpOrLogin from './components/SignUpOrLogIn';
 import Sidebar from './components/Sidebar';
-import app from './firebase';
 import NewPost from './components/NewPost';
 import Dashboard from './components/Dashboard';
 import Explore from './components/Explore';
 import BlogPage from './components/BlogPage';
+// eslint-disable-next-line no-unused-vars
+import app from './firebase';
 
 function App(props) {
     const { className } = props;
@@ -28,13 +29,6 @@ function App(props) {
     useEffect(() => {
         onAuthStateChanged(getAuth(), setCurrentUser);
     }, []);
-
-    const content =
-        currentUser !== null ? (
-            <Dashboard currentUser={currentUser} />
-        ) : (
-            <SignUpOrLogin />
-        );
 
     return (
         <Router>
@@ -78,7 +72,10 @@ function App(props) {
                         path="/explore"
                         element={<Explore currentUser={currentUser} />}
                     />
-                    <Route path="/blog/:blogName" element={<BlogPage />} />
+                    <Route
+                        path="/blog/:blogName"
+                        element={<BlogPage currentUser={currentUser} />}
+                    />
                 </Routes>
             </div>
         </Router>

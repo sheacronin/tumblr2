@@ -16,6 +16,12 @@ const FollowButton = styled.button`
     border: none;
 `;
 
+const PostProfilePhoto = styled.img`
+    width: 38px;
+    height: 38px;
+    border-radius: 3px;
+`;
+
 function BlogInfo(props) {
     const { blogName, profilePhotoURL, userId, currentUserId } = props;
 
@@ -44,7 +50,10 @@ function BlogInfo(props) {
     return (
         <div>
             <Link to={`/blog/${blogName}`}>
-                <img src={profilePhotoURL} alt={`${blogName}'s profile`} />
+                <PostProfilePhoto
+                    src={profilePhotoURL}
+                    alt={`${blogName}'s profile`}
+                />
                 <span>{blogName}</span>
             </Link>
             {!isFollowed && (
