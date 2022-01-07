@@ -8,8 +8,8 @@ import {
 import SignUpButton from './SignUpButton';
 import Logo from './Logo';
 import { useNavigate } from 'react-router-dom';
-import defaultProfilePhoto from '../img/default-profile-pic.png';
 import { doc, getFirestore, setDoc } from 'firebase/firestore';
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 
 const StyledSection = styled.section`
     width: 100vw;
@@ -45,8 +45,17 @@ function SignUp() {
     const onPasswordChanged = (e) => setPassword(e.target.value);
     const onBlogNameChanged = (e) => setBlogName(e.target.value);
 
-    function onSignUpSubmited(e) {
+    async function onSignUpSubmited(e) {
         e.preventDefault();
+
+        const defaultProfilePhotoRef = ref(
+            getStorage(),
+            'default-profile-photo.png'
+        );
+        const defaultProfilePhotoUrl = await getDownloadURL(
+            defaultProfilePhotoRef
+        );
+
         const auth = getAuth();
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
@@ -54,14 +63,14 @@ function SignUp() {
                 const user = userCredential.user;
                 updateProfile(user, {
                     displayName: blogName,
-                    photoURL: defaultProfilePhoto,
+                    photoURL: defaultProfilePhotoUrl,
                 });
 
                 const db = getFirestore();
                 setDoc(doc(db, `users/${user.uid}`), {
                     id: user.uid,
                     blogName: blogName,
-                    photoURL: defaultProfilePhoto,
+                    photoURL: defaultProfilePhotoUrl,
                     following: [user.uid],
                     likes: [],
                 }).then(() => navigate('/dashboard'));
