@@ -22,6 +22,7 @@ const StyledPost = styled(Post)`
     padding: 10px;
     font-family: 'Helvetica Neue', sans-serif;
     margin-bottom: 10px;
+    text-align: left;
 `;
 
 const PostFooter = styled.div`

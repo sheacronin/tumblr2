@@ -10,6 +10,7 @@ import { ref, getStorage, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import Post from './Post';
 
 const BlogPageContainer = styled.div`
     color: white;
@@ -19,12 +20,12 @@ const BlogPageContainer = styled.div`
     main {
         margin-top: 30px;
     }
+`;
 
-    img {
-        width: 96px;
-        height: 96px;
-        border: 5px solid white;
-    }
+const ProfileImage = styled.img`
+    width: 96px;
+    height: 96px;
+    border: 5px solid white;
 `;
 
 const TopBlogSection = styled.section`
@@ -50,10 +51,14 @@ function BlogPage(props) {
     const { currentUser } = props;
 
     const [blogOwner, setBlogOwner] = useState(null);
+    const [blogPosts, setBlogPosts] = useState([]);
     const [isEditable, setIsEditable] = useState(false);
 
     useEffect(() => {
-        getUserByBlogName().then((user) => setBlogOwner(user));
+        getUserByBlogName().then((user) => {
+            setBlogOwner(user);
+            getOwnPosts(user).then((posts) => setBlogPosts(posts));
+        });
 
         // search in users db for the user with this blog name
         async function getUserByBlogName() {
@@ -68,6 +73,16 @@ function BlogPage(props) {
                     return users[i];
                 }
             }
+        }
+
+        async function getOwnPosts(user) {
+            const db = getFirestore();
+            const postsSnapshot = await getDocs(
+                collection(db, `users/${user.id}/posts`)
+            );
+            const posts = [];
+            postsSnapshot.forEach((post) => posts.push(post.data()));
+            return posts;
         }
     }, [blogName]);
 
@@ -118,7 +133,7 @@ function BlogPage(props) {
             </TopBlogSection>
             <main>
                 {!isEditable ? (
-                    <img
+                    <ProfileImage
                         src={blogOwner.photoURL}
                         alt={`${blogOwner.blogName}'s proflie`}
                     />
@@ -127,7 +142,11 @@ function BlogPage(props) {
                 )}
                 <h2>Title</h2>
                 <p>About</p>
-                <section>Posts</section>
+                <section>
+                    {blogPosts.map((post) => (
+                        <Post post={post} currentUser={currentUser} />
+                    ))}
+                </section>
             </main>
         </BlogPageContainer>
     );
