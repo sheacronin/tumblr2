@@ -16,6 +16,7 @@ import NewPost from './components/NewPost';
 import Dashboard from './components/Dashboard';
 import Explore from './components/Explore';
 import BlogPage from './components/BlogPage';
+import Following from './components/Following';
 // eslint-disable-next-line no-unused-vars
 import app from './firebase';
 
@@ -75,6 +76,11 @@ function App(props) {
                     <Route
                         path="/blog/:blogName"
                         element={<BlogPage currentUser={currentUser} />}
+                    />
+                    <Route
+                        exact
+                        path="/following"
+                        element={<Following currentUser={currentUser} />}
                     />
                 </Routes>
             </div>
