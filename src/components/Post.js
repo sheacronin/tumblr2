@@ -14,6 +14,7 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react/cjs/react.development';
 import styled from 'styled-components';
 import BlogInfo from './BlogInfo';
+import PostPreview from './PostPreview';
 
 const StyledPost = styled(Post)`
     background-color: white;
@@ -94,7 +95,12 @@ function Post(props) {
                 userId={author.id}
                 currentUserId={currentUser.uid}
             />
-            {post.isReblog && <div>Original post</div>}
+            {post.isReblog && (
+                <PostPreview
+                    postId={post.originalPostId}
+                    currentUser={currentUser}
+                />
+            )}
             <div>{post.content}</div>
             <div>
                 {post.tags &&

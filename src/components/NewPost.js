@@ -70,7 +70,7 @@ function NewPost(props) {
     const [postContent, setPostContent] = useState('');
     const [postTags, setPostTags] = useState([]);
     const [currentTag, setCurrentTag] = useState('');
-    const { currentUser, isReblog, originalPost } = props;
+    const { currentUser, isReblog, originalPostId } = props;
 
     function onPostContentChanged(e) {
         setPostContent(e.target.value);
@@ -94,7 +94,7 @@ function NewPost(props) {
             id: postId,
             tags: postTags,
             isReblog: !!isReblog,
-            originalPostId: originalPost.id,
+            originalPostId: originalPostId,
         });
 
         navigate('/dashboard');
@@ -146,8 +146,11 @@ function NewPost(props) {
             ) : (
                 <div>Loading...</div>
             )}
-            {isReblog && originalPost !== 'loading' && (
-                <PostPreview currentUser={currentUser} post={originalPost} />
+            {isReblog && (
+                <PostPreview
+                    currentUser={currentUser}
+                    postId={originalPostId}
+                />
             )}
             <PostTextarea
                 value={postContent}
