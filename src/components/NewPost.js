@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import BlogInfo from './BlogInfo';
 import { getFirestore, setDoc, doc } from 'firebase/firestore';
 import uniqid from 'uniqid';
+import Tag from './Tag';
 
 const NewPostContainer = styled.div`
     background-color: white;
@@ -42,12 +43,25 @@ const PostTextarea = styled.textarea`
     border: none;
 `;
 
-const TagsTextarea = styled.textarea`
-    width: 100%;
+const TagsInput = styled.input`
     border: none;
+    height: 40px;
+`;
+
+const TagsList = styled.ul`
     position: absolute;
     bottom: 0;
     left: 0;
+    display: flex;
+    list-style-type: none;
+    align-items: center;
+    width: 100vw;
+    flex-wrap: wrap;
+
+    li {
+        flex-shrink: 0;
+        margin-left: 8px;
+    }
 `;
 
 function NewPost(props) {
@@ -73,11 +87,29 @@ function NewPost(props) {
         await setDoc(doc(db, `users/${currentUser.uid}/posts/${postId}`), {
             content: postContent,
             authorId: currentUser.uid,
-            authorName: currentUser.displayName,
-            authorPhotoURL: currentUser.photoURL,
             reblogs: [],
             likes: [],
             id: postId,
+            tags: postTags,
+        });
+    }
+
+    function onTagsKeyDown(e) {
+        if (e.key === 'Enter') {
+            if (postTags.includes(currentTag)) return;
+            setPostTags((prevState) => [...prevState, currentTag]);
+            setCurrentTag('');
+        }
+    }
+
+    function removeTag(tag) {
+        console.log('removing tag');
+
+        setPostTags((prevState) => {
+            const newState = [...prevState];
+            const tagIndex = newState.indexOf(tag);
+            newState.splice(tagIndex, 1);
+            return newState;
         });
     }
 
@@ -99,7 +131,7 @@ function NewPost(props) {
             {currentUser !== null ? (
                 <BlogInfo
                     blogName={currentUser.displayName}
-                    profilePhotoURL={currentUser.profilePhotoURL}
+                    profilePhotoURL={currentUser.photoURL}
                     currentUserId={currentUser.uid}
                     userId={currentUser.uid}
                 />
@@ -109,17 +141,25 @@ function NewPost(props) {
             <PostTextarea
                 value={postContent}
                 onChange={onPostContentChanged}
-            ></PostTextarea>
+                placeholder="Go ahead, put anything"
+            />
             <div>
-                <ul>
+                <TagsList>
                     {postTags.map((tag) => (
-                        <li key={tag}>{tag}</li>
+                        <li key={tag}>
+                            <Tag tagText={tag} removeTag={removeTag} />
+                        </li>
                     ))}
-                </ul>
-                <TagsTextarea
-                    value={currentTag}
-                    onChange={onCurrentTagChanged}
-                ></TagsTextarea>
+                    <li>
+                        <TagsInput
+                            type="text"
+                            value={currentTag}
+                            onChange={onCurrentTagChanged}
+                            onKeyDown={onTagsKeyDown}
+                            placeholder="#add tags"
+                        />
+                    </li>
+                </TagsList>
             </div>
         </NewPostContainer>
     );

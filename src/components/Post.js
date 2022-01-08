@@ -39,7 +39,10 @@ function Post(props) {
                 currentUserId={currentUser.uid}
             />
             <div>{post.content}</div>
-            <div>tags</div>
+            <div>
+                {post.tags &&
+                    post.tags.map((tag) => <span key={tag}>#{tag}</span>)}
+            </div>
             <div>like, reblog, etc</div>
         </article>
     );
