@@ -19,6 +19,7 @@ import BlogPage from './components/BlogPage';
 import Following from './components/Following';
 // eslint-disable-next-line no-unused-vars
 import app from './firebase';
+import ReblogPost from './components/ReblogPost';
 
 function App(props) {
     const { className } = props;
@@ -81,6 +82,10 @@ function App(props) {
                         exact
                         path="/following"
                         element={<Following currentUser={currentUser} />}
+                    />
+                    <Route
+                        path="/reblog/:originalPostId"
+                        element={<ReblogPost currentUser={currentUser} />}
                     />
                 </Routes>
             </div>

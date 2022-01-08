@@ -4,7 +4,8 @@ import BlogInfo from './BlogInfo';
 import { getFirestore, setDoc, doc } from 'firebase/firestore';
 import uniqid from 'uniqid';
 import Tag from './Tag';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import PostPreview from './PostPreview';
 
 const NewPostContainer = styled.div`
     background-color: white;
@@ -69,7 +70,7 @@ function NewPost(props) {
     const [postContent, setPostContent] = useState('');
     const [postTags, setPostTags] = useState([]);
     const [currentTag, setCurrentTag] = useState('');
-    const { currentUser } = props;
+    const { currentUser, isReblog, originalPost } = props;
 
     function onPostContentChanged(e) {
         setPostContent(e.target.value);
@@ -78,6 +79,8 @@ function NewPost(props) {
     function onCurrentTagChanged(e) {
         setCurrentTag(e.target.value);
     }
+
+    const navigate = useNavigate();
 
     async function onPostButtonClicked() {
         const db = getFirestore();
@@ -90,7 +93,11 @@ function NewPost(props) {
             authorId: currentUser.uid,
             id: postId,
             tags: postTags,
+            isReblog: !!isReblog,
+            originalPostId: originalPost.id,
         });
+
+        navigate('/dashboard');
     }
 
     function onTagsKeyDown(e) {
@@ -138,6 +145,9 @@ function NewPost(props) {
                 />
             ) : (
                 <div>Loading...</div>
+            )}
+            {isReblog && originalPost !== 'loading' && (
+                <PostPreview currentUser={currentUser} post={originalPost} />
             )}
             <PostTextarea
                 value={postContent}
