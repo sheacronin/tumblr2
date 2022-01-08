@@ -4,6 +4,7 @@ import BlogInfo from './BlogInfo';
 import { getFirestore, setDoc, doc } from 'firebase/firestore';
 import uniqid from 'uniqid';
 import Tag from './Tag';
+import { Link } from 'react-router-dom';
 
 const NewPostContainer = styled.div`
     background-color: white;
@@ -114,16 +115,18 @@ function NewPost(props) {
     return (
         <NewPostContainer>
             <PostButtonsContainer>
-                <CloseButton>
-                    <svg
-                        viewBox="0 0 16 16"
-                        width="14"
-                        height="14"
-                        fill="RGB(var(--black))"
-                    >
-                        <path d="M9.527 8l6.164-6.188a1.066 1.066 0 0 0 0-1.5 1.053 1.053 0 0 0-1.495 0L8 6.531 1.805.311a1.053 1.053 0 0 0-1.495 0 1.064 1.064 0 0 0 0 1.5L6.473 8 .31 14.188a1.064 1.064 0 0 0 0 1.501 1.052 1.052 0 0 0 1.495 0L8 9.47l6.195 6.22a1.052 1.052 0 0 0 1.495 0 1.066 1.066 0 0 0 0-1.5L9.527 8z"></path>
-                    </svg>
-                </CloseButton>
+                <Link to="/dashboard">
+                    <CloseButton>
+                        <svg
+                            viewBox="0 0 16 16"
+                            width="14"
+                            height="14"
+                            fill="RGB(var(--black))"
+                        >
+                            <path d="M9.527 8l6.164-6.188a1.066 1.066 0 0 0 0-1.5 1.053 1.053 0 0 0-1.495 0L8 6.531 1.805.311a1.053 1.053 0 0 0-1.495 0 1.064 1.064 0 0 0 0 1.5L6.473 8 .31 14.188a1.064 1.064 0 0 0 0 1.501 1.052 1.052 0 0 0 1.495 0L8 9.47l6.195 6.22a1.052 1.052 0 0 0 1.495 0 1.066 1.066 0 0 0 0-1.5L9.527 8z"></path>
+                        </svg>
+                    </CloseButton>
+                </Link>
                 <PostButton onClick={onPostButtonClicked}>Post</PostButton>
             </PostButtonsContainer>
             {currentUser !== null ? (
