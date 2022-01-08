@@ -87,8 +87,6 @@ function NewPost(props) {
         await setDoc(doc(db, `users/${currentUser.uid}/posts/${postId}`), {
             content: postContent,
             authorId: currentUser.uid,
-            reblogs: [],
-            likes: [],
             id: postId,
             tags: postTags,
         });
