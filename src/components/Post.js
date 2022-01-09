@@ -2,6 +2,7 @@ import {
     arrayRemove,
     arrayUnion,
     collection,
+    collectionGroup,
     doc,
     getDoc,
     getDocs,
@@ -14,7 +15,9 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useState } from 'react/cjs/react.development';
 import styled from 'styled-components';
+import { getPostById } from '../firestore-posts';
 import BlogInfo from './BlogInfo';
+import Notes from './Notes';
 import PostPreview from './PostPreview';
 
 const StyledPost = styled(Post)`
@@ -43,6 +46,8 @@ function Post(props) {
     const { className, post, currentUser } = props;
     const [author, setAuthor] = useState('loading');
     const [likes, setLikes] = useState([]);
+    const [postReblogs, setPostReblogs] = useState([]);
+    const [showNotes, setShowNotes] = useState(false);
     const doesCurrentUserLike = likes.includes(currentUser.uid);
 
     useEffect(() => {
@@ -74,6 +79,59 @@ function Post(props) {
             return postLikes;
         }
     }, [post.id]);
+
+    useEffect(() => {
+        getReblogs().then((allReblogs) => setPostReblogs(allReblogs));
+
+        async function getReblogs() {
+            const db = getFirestore();
+            // use this post's ID
+            const originalPost = await getFirstOriginalPost();
+
+            const originalPostReblogs = await getAllReblogsOfPost(originalPost);
+            const allReblogs = [...originalPostReblogs];
+            getAllReblogsOfSeveralPosts(originalPostReblogs);
+            console.log(allReblogs);
+            return allReblogs;
+
+            async function getFirstOriginalPost() {
+                let currentPost = post;
+
+                while (currentPost.originalPostId) {
+                    currentPost = await getPostById(currentPost.originalPostId);
+                }
+
+                return currentPost;
+            }
+
+            // check for every post that uses that post as a reblog
+            async function getAllReblogsOfPost(post) {
+                const q = query(
+                    collectionGroup(db, 'posts'),
+                    where('originalPostId', '==', post.id)
+                );
+                const reblogsSnapshot = await getDocs(q);
+
+                const reblogs = [];
+                reblogsSnapshot.forEach((reblog) =>
+                    reblogs.push(reblog.data())
+                );
+                return reblogs;
+            }
+
+            async function getAllReblogsOfSeveralPosts(posts) {
+                for (let i = 0; i < posts.length; i++) {
+                    const moreReblogs = await getAllReblogsOfPost(posts[i]);
+                    if (moreReblogs[0]) allReblogs.push(...moreReblogs);
+
+                    // loop thru more reblogs and get all reblogged posts of them
+                    for (let j = 0; j < moreReblogs.length; j++) {
+                        await getAllReblogsOfSeveralPosts(moreReblogs);
+                    }
+                }
+            }
+        }
+    }, [post]);
 
     function toggleLikePost() {
         const db = getFirestore();
@@ -120,7 +178,9 @@ function Post(props) {
                     post.tags.map((tag) => <span key={tag}>#{tag}</span>)}
             </div>
             <PostFooter>
-                <span>{likes.length} likes</span>
+                <Button onClick={() => setShowNotes((prevState) => !prevState)}>
+                    <span>{likes.length + postReblogs.length} notes</span>
+                </Button>
                 <div>
                     <Link to={`/reblog/${post.id}`}>
                         <Button>
@@ -156,6 +216,13 @@ function Post(props) {
                     </Button>
                 </div>
             </PostFooter>
+            {showNotes && (
+                <Notes
+                    reblogs={postReblogs}
+                    likes={likes}
+                    currentUser={currentUser}
+                />
+            )}
         </article>
     );
 }

@@ -1,15 +1,8 @@
 import BlogInfo from './BlogInfo';
 import { useEffect, useState } from 'react';
-import {
-    getFirestore,
-    getDoc,
-    doc,
-    collectionGroup,
-    query,
-    where,
-    getDocs,
-} from 'firebase/firestore';
+import { getFirestore, getDoc, doc } from 'firebase/firestore';
 import styled from 'styled-components';
+import { getPostById } from '../firestore-posts';
 
 const PostPreviewContainer = styled.article`
     padding: 10px;
@@ -19,30 +12,16 @@ const PostPreviewContainer = styled.article`
 `;
 
 function PostPreview(props) {
-    const { currentUser, postId } = props;
+    const { currentUser, postId, isNote } = props;
     const [author, setAuthor] = useState('loading');
 
     const [post, setPost] = useState('loading');
 
     useEffect(() => {
-        getPost().then((post) => {
+        getPostById(postId).then((post) => {
             setPost(post);
             getPostAuthor(post).then((postAuthor) => setAuthor(postAuthor));
         });
-
-        async function getPost() {
-            const db = getFirestore();
-
-            const postQ = query(
-                collectionGroup(db, 'posts'),
-                where('id', '==', postId)
-            );
-
-            const postSnapshot = await getDocs(postQ);
-            let op;
-            postSnapshot.forEach((thisPost) => (op = thisPost.data()));
-            return op;
-        }
 
         async function getPostAuthor(post) {
             const db = getFirestore();
@@ -56,7 +35,7 @@ function PostPreview(props) {
 
     return (
         <section>
-            {post.originalPostId && (
+            {post.originalPostId && !isNote && (
                 <PostPreview
                     currentUser={currentUser}
                     postId={post.originalPostId}

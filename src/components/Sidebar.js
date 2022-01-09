@@ -7,7 +7,7 @@ const StyledNav = styled.nav`
     z-index: 1;
     height: calc(100vh - 44px);
     width: 90vw;
-    position: absolute;
+    position: fixed;
     background-color: #001936;
     color: white;
     top: 44px;
