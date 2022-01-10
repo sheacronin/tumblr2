@@ -48,7 +48,7 @@ const InvisibleButton = styled.button`
 
 function BlogPage(props) {
     const { blogName } = useParams();
-    const { currentUser } = props;
+    const { currentUser, followedUsers, followUser } = props;
 
     const [blogOwner, setBlogOwner] = useState(null);
     const [blogPosts, setBlogPosts] = useState([]);
@@ -148,7 +148,12 @@ function BlogPage(props) {
                 <p>About</p>
                 <section>
                     {blogPosts.map((post) => (
-                        <Post post={post} currentUser={currentUser} />
+                        <Post
+                            post={post}
+                            currentUser={currentUser}
+                            isFollowed={followedUsers.includes(blogOwner.id)}
+                            followUser={followUser}
+                        />
                     ))}
                 </section>
             </main>

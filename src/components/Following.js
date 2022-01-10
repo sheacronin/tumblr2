@@ -6,9 +6,9 @@ import {
     query,
     updateDoc,
     where,
+    doc,
 } from 'firebase/firestore';
-import { getDoc, doc } from 'firebase/firestore';
-import { useEffect, useState } from 'react/cjs/react.development';
+import { useEffect, useState } from 'react';
 import BlogInfo from './BlogInfo';
 import styled from 'styled-components';
 
@@ -35,25 +35,20 @@ const FollowedUsersContainer = styled.section`
 `;
 
 function Following(props) {
-    const { currentUser } = props;
-    const [followedUsers, setFollowedUsers] = useState([]);
+    const { currentUser, followedUsers } = props;
+    const [followedUsersInfo, setFollowedUsersInfo] = useState([]);
 
     useEffect(() => {
-        if (currentUser === null) return;
+        if (followedUsers.length === 0) return;
 
-        getFollowedUsers().then((users) => setFollowedUsers(users));
+        getFollowedUsers().then((users) => setFollowedUsersInfo(users));
 
         async function getFollowedUsers() {
             const db = getFirestore();
-            const currentUserId = currentUser.uid;
-            const currentUserInfo = await getDoc(
-                doc(db, 'users', currentUserId)
-            );
-            const followedIds = currentUserInfo.data().following;
 
             const followingQ = query(
                 collection(db, 'users'),
-                where('id', 'in', followedIds)
+                where('id', 'in', followedUsers)
             );
             const followingSnapshot = await getDocs(followingQ);
             const followed = [];
@@ -62,7 +57,7 @@ function Following(props) {
             );
             return followed;
         }
-    }, [currentUser]);
+    }, [followedUsers]);
 
     function unfollowUser(userToUnfollow) {
         const db = getFirestore();
@@ -71,7 +66,7 @@ function Following(props) {
             following: arrayRemove(userToUnfollow.id),
         });
 
-        setFollowedUsers((prevState) => {
+        setFollowedUsersInfo((prevState) => {
             const newState = [...prevState];
             const unfollowIndex = newState.indexOf(userToUnfollow);
             newState.splice(unfollowIndex, 1);
@@ -81,15 +76,16 @@ function Following(props) {
 
     return (
         <FollowingContainer>
-            <h2>{followedUsers.length} Following</h2>
+            <h2>{followedUsersInfo.length} Following</h2>
             <FollowedUsersContainer>
-                {followedUsers.map((user) => (
+                {followedUsersInfo.map((user) => (
                     <div key={user.id}>
                         <BlogInfo
                             blogName={user.blogName}
                             profilePhotoURL={user.photoURL}
                             userId={user.id}
                             currentUserId={currentUser.uid}
+                            isFollowed={true}
                         />
                         {user.id !== currentUser.uid && (
                             <button onClick={() => unfollowUser(user)}>

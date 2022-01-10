@@ -34,12 +34,13 @@ const StyledPost = styled(Post)`
 const PostFooter = styled.div`
     display: flex;
     justify-content: space-between;
+    margin-top: 25px;
 `;
 
 const Button = styled.button`
     background: none;
     border: none;
-    margin-left: 15px;
+    margin-left: ${(props) => (props.notes ? '0' : '15px')};
     font-family: Helvetica Neue;
     font-size: 16px;
     font-weight: 700;
@@ -193,7 +194,10 @@ function Post(props) {
                     post.tags.map((tag) => <PostTag key={tag}>#{tag}</PostTag>)}
             </div>
             <PostFooter>
-                <Button onClick={() => setShowNotes((prevState) => !prevState)}>
+                <Button
+                    notes
+                    onClick={() => setShowNotes((prevState) => !prevState)}
+                >
                     <span>{likes.length + postReblogs.length} notes</span>
                 </Button>
                 <div>

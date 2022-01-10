@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { getAuth, signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import BlogInfo from './BlogInfo';
 
 const StyledNav = styled.nav`
     z-index: 1;
@@ -15,6 +16,10 @@ const StyledNav = styled.nav`
     ul li {
         list-style-type: none;
         min-height: 41px;
+    }
+
+    .dashboard-li {
+        margin-top: 15px;
     }
 
     svg {
@@ -34,7 +39,15 @@ const StyledNav = styled.nav`
     }
 
     button {
-        min-height: 41px;
+        min-height: 30px;
+        font-family: Helvetica Neue;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+
+        span {
+            padding-left: 15px;
+        }
     }
 
     a span {
@@ -49,11 +62,24 @@ const CreateAPostListItem = styled.li`
         padding: 8px 0;
         background-color: #00b8ff;
         border-radius: 5px;
+        display: flex;
+        align-items: center;
+        width: 200px;
+        height: 40px;
+        margin: 10px auto;
+    }
+`;
+
+const BlogsContainer = styled.div`
+    margin-left: 15px;
+
+    h4 {
+        font-size: 21px;
     }
 `;
 
 function Sidebar(props) {
-    const { setIsShowing } = props;
+    const { setIsShowing, currentUser } = props;
 
     const navigate = useNavigate();
 
@@ -86,7 +112,7 @@ function Sidebar(props) {
                         <span>Create a post</span>
                     </Link>
                 </CreateAPostListItem>
-                <li>
+                <li className="dashboard-li">
                     <Link to="/dashboard">
                         <svg
                             width="20"
@@ -166,10 +192,16 @@ function Sidebar(props) {
                     </button>
                 </li>
             </ul>
-            <h4>Blogs</h4>
-            <ul>
-                <div>Blog</div>
-            </ul>
+            <BlogsContainer>
+                <h4>Blogs</h4>
+                <ul>
+                    <BlogInfo
+                        blogName={currentUser.displayName}
+                        profilePhotoURL={currentUser.photoURL}
+                        isFollowed={true}
+                    />
+                </ul>
+            </BlogsContainer>
         </StyledNav>
     );
 }

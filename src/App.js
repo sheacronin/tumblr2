@@ -20,6 +20,13 @@ import Following from './components/Following';
 // eslint-disable-next-line no-unused-vars
 import app from './firebase';
 import ReblogPost from './components/ReblogPost';
+import {
+    getFirestore,
+    getDoc,
+    doc,
+    updateDoc,
+    arrayUnion,
+} from 'firebase/firestore';
 
 function App(props) {
     const { className } = props;
@@ -27,10 +34,34 @@ function App(props) {
     console.log('current user', currentUser);
 
     const [isSidebarShowing, setIsSidebarShowing] = useState(false);
+    const [followedUsers, setFollowedUsers] = useState([]);
 
     useEffect(() => {
         onAuthStateChanged(getAuth(), setCurrentUser);
     }, []);
+
+    useEffect(() => {
+        getFollowedUsers().then((result) => setFollowedUsers(result));
+
+        async function getFollowedUsers() {
+            if (currentUser === null) return [];
+
+            const db = getFirestore();
+            const userInfo = await getDoc(doc(db, `users/${currentUser.uid}`));
+
+            const followedIds = userInfo.data().following;
+
+            return followedIds;
+        }
+    }, [currentUser]);
+
+    async function followUser(id) {
+        const db = getFirestore();
+        updateDoc(doc(db, `users/${currentUser.uid}`), {
+            following: arrayUnion(id),
+        });
+        setFollowedUsers((prevState) => [...prevState, id]);
+    }
 
     return (
         <Router>
@@ -43,7 +74,10 @@ function App(props) {
                     }}
                 />
                 {isSidebarShowing && (
-                    <Sidebar setIsShowing={setIsSidebarShowing} />
+                    <Sidebar
+                        setIsShowing={setIsSidebarShowing}
+                        currentUser={currentUser}
+                    />
                 )}
                 <Routes>
                     <Route
@@ -60,7 +94,13 @@ function App(props) {
                     <Route
                         exact
                         path="/dashboard"
-                        element={<Dashboard currentUser={currentUser} />}
+                        element={
+                            <Dashboard
+                                currentUser={currentUser}
+                                followedUsers={followedUsers}
+                                followUser={followUser}
+                            />
+                        }
                     />
                     <Route exact path="/register" element={<SignUp />} />
                     <Route exact path="/login" element={<LogIn />} />
@@ -72,16 +112,33 @@ function App(props) {
                     <Route
                         exact
                         path="/explore"
-                        element={<Explore currentUser={currentUser} />}
+                        element={
+                            <Explore
+                                currentUser={currentUser}
+                                followedUsers={followedUsers}
+                                followUser={followUser}
+                            />
+                        }
                     />
                     <Route
                         path="/blog/:blogName"
-                        element={<BlogPage currentUser={currentUser} />}
+                        element={
+                            <BlogPage
+                                currentUser={currentUser}
+                                followedUsers={followedUsers}
+                                followUser={followUser}
+                            />
+                        }
                     />
                     <Route
                         exact
                         path="/following"
-                        element={<Following currentUser={currentUser} />}
+                        element={
+                            <Following
+                                currentUser={currentUser}
+                                followedUsers={followedUsers}
+                            />
+                        }
                     />
                     <Route
                         path="/reblog/:originalPostId"

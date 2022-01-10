@@ -55,6 +55,7 @@ function Dashboard(props) {
                         key={post.id}
                         post={post}
                         currentUser={currentUser}
+                        isFollowed={true}
                     />
                 ))}
             </PostsContainer>

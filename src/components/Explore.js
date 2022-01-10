@@ -1,12 +1,4 @@
-import {
-    collection,
-    getDocs,
-    getFirestore,
-    getDoc,
-    doc,
-    updateDoc,
-    arrayUnion,
-} from 'firebase/firestore';
+import { collection, getDocs, getFirestore } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import StyledPost from './Post';
@@ -16,10 +8,9 @@ const PostsContainer = styled.main`
 `;
 
 function Explore(props) {
-    const { currentUser } = props;
+    const { currentUser, followedUsers, followUser } = props;
 
     const [explorePosts, setExplorePosts] = useState([]);
-    const [followedUsers, setFollowedUsers] = useState([]);
 
     useEffect(() => {
         getAllPosts().then((posts) => setExplorePosts(posts));
@@ -48,29 +39,6 @@ function Explore(props) {
             return posts;
         }
     }, []);
-
-    useEffect(() => {
-        getFollowedUsers().then((result) => setFollowedUsers(result));
-
-        async function getFollowedUsers() {
-            if (currentUser === null) return;
-
-            const db = getFirestore();
-            const userInfo = await getDoc(doc(db, `users/${currentUser.uid}`));
-
-            const followedIds = userInfo.data().following;
-
-            return followedIds;
-        }
-    }, [currentUser]);
-
-    async function followUser(id) {
-        const db = getFirestore();
-        updateDoc(doc(db, `users/${currentUser.uid}`), {
-            following: arrayUnion(id),
-        });
-        setFollowedUsers((prevState) => [...prevState, id]);
-    }
 
     return (
         <PostsContainer>
