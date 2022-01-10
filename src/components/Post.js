@@ -1,21 +1,16 @@
 import {
     arrayRemove,
     arrayUnion,
-    collection,
-    collectionGroup,
     doc,
     getDoc,
-    getDocs,
     getFirestore,
-    query,
     updateDoc,
-    where,
 } from 'firebase/firestore';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import styled from 'styled-components';
-import { getPostById } from '../firestore-posts';
+import { getReblogs, getPostLikes } from '../firestore-posts';
 import BlogInfo from './BlogInfo';
 import Notes from './Notes';
 import PostPreview from './PostPreview';
@@ -57,7 +52,14 @@ const PostContent = styled.div`
 `;
 
 function Post(props) {
-    const { className, post, currentUser, followUser, isFollowed } = props;
+    const {
+        className,
+        post,
+        currentUser,
+        followUser,
+        isFollowed,
+        followedUsers,
+    } = props;
     const [author, setAuthor] = useState('loading');
     const [likes, setLikes] = useState([]);
     const [postReblogs, setPostReblogs] = useState([]);
@@ -75,76 +77,11 @@ function Post(props) {
     }, [post.authorId]);
 
     useEffect(() => {
-        getPostLikes().then((result) => setLikes(result));
-
-        async function getPostLikes() {
-            const db = getFirestore();
-
-            const likesQ = query(
-                collection(db, 'users'),
-                where('likes', 'array-contains', post.id)
-            );
-
-            const likesSnapshot = await getDocs(likesQ);
-            const postLikes = [];
-            likesSnapshot.forEach((userThatLiked) =>
-                postLikes.push(userThatLiked.data().id)
-            );
-            return postLikes;
-        }
+        getPostLikes(post.id).then((result) => setLikes(result));
     }, [post.id]);
 
     useEffect(() => {
-        getReblogs().then((allReblogs) => setPostReblogs(allReblogs));
-
-        async function getReblogs() {
-            const db = getFirestore();
-            // use this post's ID
-            const originalPost = await getFirstOriginalPost();
-
-            const originalPostReblogs = await getAllReblogsOfPost(originalPost);
-            const allReblogs = [...originalPostReblogs];
-            getAllReblogsOfSeveralPosts(originalPostReblogs);
-            console.log(allReblogs);
-            return allReblogs;
-
-            async function getFirstOriginalPost() {
-                let currentPost = post;
-
-                while (currentPost.originalPostId) {
-                    currentPost = await getPostById(currentPost.originalPostId);
-                }
-
-                return currentPost;
-            }
-
-            // check for every post that uses that post as a reblog
-            async function getAllReblogsOfPost(post) {
-                const q = query(
-                    collectionGroup(db, 'posts'),
-                    where('originalPostId', '==', post.id)
-                );
-                const reblogsSnapshot = await getDocs(q);
-
-                const reblogs = [];
-                reblogsSnapshot.forEach((reblog) =>
-                    reblogs.push(reblog.data())
-                );
-                return reblogs;
-            }
-
-            async function getAllReblogsOfSeveralPosts(posts) {
-                for (let i = 0; i < posts.length; i++) {
-                    const moreReblogs = await getAllReblogsOfPost(posts[i]);
-                    if (moreReblogs[0]) allReblogs.push(...moreReblogs);
-
-                    // loop thru more reblogs and get all reblogged posts of them
-                    for (let j = 0; j < moreReblogs.length; j++) {
-                        await getAllReblogsOfSeveralPosts(moreReblogs);
-                    }
-                }
-            }
-        }
+        getReblogs(post).then((allReblogs) => setPostReblogs(allReblogs));
     }, [post]);
 
     function toggleLikePost() {
@@ -170,6 +107,7 @@ function Post(props) {
         }
     }
 
+    if (currentUser === null) return;
     if (author === 'loading') return <div>Loading...</div>;
 
     return (
@@ -240,6 +178,7 @@ function Post(props) {
                     reblogs={postReblogs}
                     likes={likes}
                     currentUser={currentUser}
+                    followedUsers={followedUsers}
                 />
             )}
         </article>

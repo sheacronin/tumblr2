@@ -9,9 +9,10 @@ import PostPreview from './PostPreview';
 
 const NewPostContainer = styled.div`
     background-color: white;
-    margin-top: 44px;
+    margin: 44px auto 0 auto;
     height: 375px;
     width: 100vw;
+    max-width: 700px;
     position: relative;
 `;
 

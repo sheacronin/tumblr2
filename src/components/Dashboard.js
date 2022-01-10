@@ -16,7 +16,7 @@ const PostsContainer = styled.main`
 `;
 
 function Dashboard(props) {
-    const { currentUser } = props;
+    const { currentUser, followedUsers } = props;
 
     const [dashboardPosts, setDashboardPosts] = useState([]);
 
@@ -56,6 +56,7 @@ function Dashboard(props) {
                         post={post}
                         currentUser={currentUser}
                         isFollowed={true}
+                        followedUsers={followedUsers}
                     />
                 ))}
             </PostsContainer>

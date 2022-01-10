@@ -8,6 +8,12 @@ const PostsContainer = styled.main`
     margin-top: 40px;
 `;
 
+const LikesInfo = styled.div`
+    color: white;
+    padding: 15px;
+    font-size: 18px;
+`;
+
 function Likes(props) {
     const { currentUser, followedUsers, followUser } = props;
     const [likedPosts, setLikedPosts] = useState([]);
@@ -36,6 +42,7 @@ function Likes(props) {
 
     return (
         <PostsContainer>
+            <LikesInfo>{likedPosts.length} likes</LikesInfo>
             {likedPosts.map((post) => (
                 <StyledPost
                     key={post.id}

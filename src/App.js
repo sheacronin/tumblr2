@@ -28,6 +28,7 @@ import {
     arrayUnion,
 } from 'firebase/firestore';
 import Likes from './components/Likes';
+import Activity from './components/Activity';
 
 function App(props) {
     const { className } = props;
@@ -151,6 +152,11 @@ function App(props) {
                                 followUser={followUser}
                             />
                         }
+                    />
+                    <Route
+                        exact
+                        path="/activity"
+                        element={<Activity currentUser={currentUser} />}
                     />
                     <Route
                         path="/reblog/:originalPostId"

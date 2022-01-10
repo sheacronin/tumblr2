@@ -1,8 +1,8 @@
-import { doc, getDoc, getFirestore } from 'firebase/firestore';
 import { useState } from 'react';
-import { useEffect } from 'react/cjs/react.development';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import PostPreview from './PostPreview';
+import { getUserById } from '../firestore-posts';
 
 const NotesButtonsContainer = styled.div`
     display: flex;
@@ -34,7 +34,7 @@ const NotesButtonsContainer = styled.div`
 `;
 
 function Notes(props) {
-    const { reblogs, likes, currentUser } = props;
+    const { reblogs, likes, currentUser, followedUsers } = props;
     const [likers, setLikers] = useState([]);
     // if  not showing reblogs, showing likes
     const [showingReblogs, setShowingReblogs] = useState(true);
@@ -52,18 +52,11 @@ function Notes(props) {
         }
     }, [likes]);
 
-    async function getUserById(id) {
-        const db = getFirestore();
-        const user = await getDoc(doc(db, 'users', id));
-        console.log(user.data());
-        return user.data();
-    }
-
     return (
         <section>
             <NotesButtonsContainer>
                 <button
-                    className={showingReblogs && 'green'}
+                    className={showingReblogs ? 'green' : ''}
                     onClick={() => setShowingReblogs(true)}
                 >
                     <svg
@@ -78,7 +71,7 @@ function Notes(props) {
                     {reblogs.length}
                 </button>
                 <button
-                    className={!showingReblogs && 'red'}
+                    className={!showingReblogs ? 'red' : ''}
                     onClick={() => setShowingReblogs(false)}
                 >
                     <svg
@@ -100,6 +93,7 @@ function Notes(props) {
                           postId={reblog.id}
                           currentUser={currentUser}
                           isNote={true}
+                          isFollowed={followedUsers.includes(reblog.authorId)}
                       />
                   ))
                 : likers.map((liker) => (
