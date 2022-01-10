@@ -13,7 +13,7 @@ import {
 } from 'firebase/firestore';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useState } from 'react/cjs/react.development';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { getPostById } from '../firestore-posts';
 import BlogInfo from './BlogInfo';
@@ -25,9 +25,9 @@ const StyledPost = styled(Post)`
     width: 100vw;
     color: black;
     max-width: 540px;
-    padding: 10px;
+    padding: 15px 20px;
     font-family: 'Helvetica Neue', sans-serif;
-    margin-bottom: 10px;
+    margin: 0 auto 10px auto;
     text-align: left;
 `;
 
@@ -40,10 +40,23 @@ const Button = styled.button`
     background: none;
     border: none;
     margin-left: 15px;
+    font-family: Helvetica Neue;
+    font-size: 16px;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.65);
+`;
+
+const PostTag = styled.span`
+    color: rgba(0, 0, 0, 0.65);
+    margin-right: 11px;
+`;
+
+const PostContent = styled.div`
+    margin: 15px 0;
 `;
 
 function Post(props) {
-    const { className, post, currentUser } = props;
+    const { className, post, currentUser, followUser, isFollowed } = props;
     const [author, setAuthor] = useState('loading');
     const [likes, setLikes] = useState([]);
     const [postReblogs, setPostReblogs] = useState([]);
@@ -164,18 +177,20 @@ function Post(props) {
                 blogName={author.blogName}
                 profilePhotoURL={author.photoURL}
                 userId={author.id}
-                currentUserId={currentUser.uid}
+                followUser={followUser}
+                isFollowed={isFollowed}
             />
             {post.isReblog && (
                 <PostPreview
                     postId={post.originalPostId}
-                    currentUser={currentUser}
+                    followUser={followUser}
+                    isFollowed={isFollowed}
                 />
             )}
-            <div>{post.content}</div>
+            <PostContent>{post.content}</PostContent>
             <div>
                 {post.tags &&
-                    post.tags.map((tag) => <span key={tag}>#{tag}</span>)}
+                    post.tags.map((tag) => <PostTag key={tag}>#{tag}</PostTag>)}
             </div>
             <PostFooter>
                 <Button onClick={() => setShowNotes((prevState) => !prevState)}>

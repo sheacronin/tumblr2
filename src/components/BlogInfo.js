@@ -1,11 +1,3 @@
-import {
-    arrayUnion,
-    doc,
-    getDoc,
-    getFirestore,
-    updateDoc,
-} from 'firebase/firestore';
-import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
@@ -22,34 +14,26 @@ const PostProfilePhoto = styled.img`
     border-radius: 3px;
 `;
 
-function BlogInfo(props) {
-    const { blogName, profilePhotoURL, userId, currentUserId } = props;
+const BlogInfoContainer = styled.div`
+    display: flex;
+    a {
+        text-decoration: none;
+        color: black;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
 
-    const [isFollowed, setIsFollowed] = useState(false);
-
-    useEffect(() => {
-        isCurrentUserFollowing().then((result) => setIsFollowed(result));
-
-        async function isCurrentUserFollowing() {
-            const db = getFirestore();
-            const userInfo = await getDoc(doc(db, `users/${currentUserId}`));
-
-            const followedIds = userInfo.data().following;
-
-            return followedIds.includes(userId);
+        span {
+            margin-left: 10px;
         }
-    }, [currentUserId, userId]);
-
-    async function followUser() {
-        const db = getFirestore();
-        updateDoc(doc(db, `users/${currentUserId}`), {
-            following: arrayUnion(userId),
-        });
-        setIsFollowed(true);
     }
+`;
+
+function BlogInfo(props) {
+    const { blogName, profilePhotoURL, userId, isFollowed, followUser } = props;
 
     return (
-        <div>
+        <BlogInfoContainer>
             <Link to={`/blog/${blogName}`}>
                 <PostProfilePhoto
                     src={profilePhotoURL}
@@ -58,9 +42,11 @@ function BlogInfo(props) {
                 <span>{blogName}</span>
             </Link>
             {!isFollowed && (
-                <FollowButton onClick={followUser}>Follow</FollowButton>
+                <FollowButton onClick={() => followUser(userId)}>
+                    Follow
+                </FollowButton>
             )}
-        </div>
+        </BlogInfoContainer>
     );
 }
 

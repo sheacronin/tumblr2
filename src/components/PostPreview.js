@@ -12,7 +12,7 @@ const PostPreviewContainer = styled.article`
 `;
 
 function PostPreview(props) {
-    const { currentUser, postId, isNote } = props;
+    const { postId, isNote, followUser, isFollowed } = props;
     const [author, setAuthor] = useState('loading');
 
     const [post, setPost] = useState('loading');
@@ -37,8 +37,9 @@ function PostPreview(props) {
         <section>
             {post.originalPostId && !isNote && (
                 <PostPreview
-                    currentUser={currentUser}
                     postId={post.originalPostId}
+                    followUser={followUser}
+                    isFollowed={isFollowed}
                 />
             )}
             <PostPreviewContainer>
@@ -46,7 +47,8 @@ function PostPreview(props) {
                     blogName={author.blogName}
                     profilePhotoURL={author.photoURL}
                     userId={author.id}
-                    currentUserId={currentUser.uid}
+                    followUser={followUser}
+                    isFollowed={isFollowed}
                 />
                 <div>{post.content}</div>
             </PostPreviewContainer>
