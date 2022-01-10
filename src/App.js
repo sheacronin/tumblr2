@@ -27,6 +27,7 @@ import {
     updateDoc,
     arrayUnion,
 } from 'firebase/firestore';
+import Likes from './components/Likes';
 
 function App(props) {
     const { className } = props;
@@ -137,6 +138,17 @@ function App(props) {
                             <Following
                                 currentUser={currentUser}
                                 followedUsers={followedUsers}
+                            />
+                        }
+                    />
+                    <Route
+                        exact
+                        path="/likes"
+                        element={
+                            <Likes
+                                currentUser={currentUser}
+                                followedUsers={followedUsers}
+                                followUser={followUser}
                             />
                         }
                     />
