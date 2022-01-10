@@ -40,6 +40,8 @@ function Explore(props) {
         }
     }, []);
 
+    if (currentUser === null) return null;
+
     return (
         <PostsContainer>
             {explorePosts.map((post) => (

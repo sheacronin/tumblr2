@@ -43,15 +43,16 @@ function Likes(props) {
     return (
         <PostsContainer>
             <LikesInfo>{likedPosts.length} likes</LikesInfo>
-            {likedPosts.map((post) => (
-                <StyledPost
-                    key={post.id}
-                    post={post}
-                    currentUser={currentUser}
-                    isFollowed={followedUsers.includes(post.authorId)}
-                    followUser={followUser}
-                />
-            ))}
+            {likedPosts.length > 0 &&
+                likedPosts.map((post) => (
+                    <StyledPost
+                        key={post.id}
+                        post={post}
+                        currentUser={currentUser}
+                        isFollowed={followedUsers.includes(post.authorId)}
+                        followUser={followUser}
+                    />
+                ))}
         </PostsContainer>
     );
 }

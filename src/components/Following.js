@@ -13,8 +13,9 @@ import BlogInfo from './BlogInfo';
 import styled from 'styled-components';
 
 const FollowingContainer = styled.main`
-    margin-top: 44px;
+    margin: 44px auto 0 auto;
     color: white;
+    max-width: 700px;
 `;
 
 const FollowedUsersContainer = styled.section`
@@ -73,6 +74,8 @@ function Following(props) {
             return newState;
         });
     }
+
+    if (currentUser === null) return null;
 
     return (
         <FollowingContainer>

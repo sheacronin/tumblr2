@@ -86,6 +86,8 @@ function BlogPage(props) {
         }
     }, [blogName]);
 
+    if (currentUser === null) return null;
+
     if (blogOwner === null) {
         return <div>Loading...</div>;
     }

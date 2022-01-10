@@ -47,6 +47,8 @@ function Dashboard(props) {
         }
     }, [currentUser]);
 
+    if (currentUser === null) return null;
+
     return (
         <section>
             <PostsContainer>

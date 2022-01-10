@@ -12,6 +12,7 @@ const StyledNav = styled.nav`
     background-color: #001936;
     color: white;
     top: 44px;
+    max-width: 450px;
 
     ul li {
         list-style-type: none;
@@ -95,6 +96,8 @@ function Sidebar(props) {
                 // An error happened.
             });
     }
+
+    if (currentUser === null) return null;
 
     return (
         <StyledNav>

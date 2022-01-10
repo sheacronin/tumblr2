@@ -72,7 +72,7 @@ function SignUp() {
                     blogName: blogName,
                     photoURL: defaultProfilePhotoUrl,
                     following: [user.uid],
-                    likes: [],
+                    // there will also be a likes property when user likes a post
                 }).then(() => navigate('/dashboard'));
             })
             .catch((error) => {
