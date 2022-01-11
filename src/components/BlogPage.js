@@ -19,13 +19,16 @@ const BlogPageContainer = styled.div`
 
     main {
         margin-top: 30px;
+
+        section {
+            margin-top: 30px;
+        }
     }
 `;
 
 const ProfileImage = styled.img`
     width: 96px;
     height: 96px;
-    border: 5px solid white;
 `;
 
 const TopBlogSection = styled.section`
@@ -53,6 +56,8 @@ function BlogPage(props) {
     const [blogOwner, setBlogOwner] = useState(null);
     const [blogPosts, setBlogPosts] = useState([]);
     const [isEditable, setIsEditable] = useState(false);
+
+    console.log(followedUsers);
 
     useEffect(() => {
         getUserByBlogName().then((user) => {
@@ -146,14 +151,14 @@ function BlogPage(props) {
                 ) : (
                     <EditableProfilePhoto currentUser={currentUser} />
                 )}
-                <h2>Title</h2>
-                <p>About</p>
                 <section>
                     {blogPosts.map((post) => (
                         <Post
+                            key={post.id}
                             post={post}
                             currentUser={currentUser}
                             isFollowed={followedUsers.includes(blogOwner.id)}
+                            followedUsers={followedUsers}
                             followUser={followUser}
                         />
                     ))}
@@ -162,6 +167,17 @@ function BlogPage(props) {
         </BlogPageContainer>
     );
 }
+
+const EditableImageContainer = styled.div`
+    img {
+        filter: grayscale(80%);
+    }
+`;
+
+const FileInput = styled.input`
+    display: block;
+    margin: 0 auto;
+`;
 
 function EditableProfilePhoto(props) {
     const { currentUser } = props;
@@ -188,14 +204,13 @@ function EditableProfilePhoto(props) {
     }
 
     return (
-        <div>
-            Edit
-            <img
+        <EditableImageContainer>
+            <ProfileImage
                 src={currentUser.photoURL}
                 alt={`${currentUser.displayName}'s proflie`}
             />
-            <input type="file" onChange={onFileChanged} />
-        </div>
+            <FileInput type="file" onChange={onFileChanged} />
+        </EditableImageContainer>
     );
 }
 
