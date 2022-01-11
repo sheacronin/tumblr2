@@ -49,6 +49,7 @@ function Explore(props) {
                     key={post.id}
                     isFollowed={followedUsers.includes(post.authorId)}
                     followUser={followUser}
+                    followedUsers={followedUsers}
                 />
             ))}
         </PostsContainer>

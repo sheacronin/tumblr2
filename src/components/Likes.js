@@ -51,6 +51,7 @@ function Likes(props) {
                         currentUser={currentUser}
                         isFollowed={followedUsers.includes(post.authorId)}
                         followUser={followUser}
+                        followedUsers={followedUsers}
                     />
                 ))}
         </PostsContainer>
