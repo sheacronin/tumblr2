@@ -1,7 +1,7 @@
 import { onAuthStateChanged, getAuth } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import {
-    BrowserRouter as Router,
+    HashRouter as Router,
     Routes,
     Route,
     Navigate,

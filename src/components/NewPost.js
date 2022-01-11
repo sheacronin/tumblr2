@@ -104,7 +104,7 @@ function NewPost(props) {
             id: postId,
             tags: postTags,
             isReblog: !!isReblog,
-            originalPostId: originalPostId,
+            originalPostId: originalPostId || null,
         });
 
         navigate('/dashboard');
