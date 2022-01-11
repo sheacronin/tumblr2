@@ -14,6 +14,10 @@ const NewPostContainer = styled.div`
     width: 100vw;
     max-width: 700px;
     position: relative;
+
+    img {
+        margin-left: 10px;
+    }
 `;
 
 const PostButtonsContainer = styled.div`
@@ -44,26 +48,33 @@ const PostButton = styled.button`
 const PostTextarea = styled.textarea`
     width: 100%;
     border: none;
+    font-family: Helvetica Neue;
+    font-size: 16px;
+    padding: 20px;
+    height: 60%;
 `;
 
 const TagsInput = styled.input`
     border: none;
     height: 40px;
+    font-family: Helvetica Neue;
+    font-size: 16px;
 `;
 
 const TagsList = styled.ul`
     position: absolute;
-    bottom: 0;
     left: 0;
     display: flex;
     list-style-type: none;
     align-items: center;
     width: 100vw;
     flex-wrap: wrap;
+    padding-bottom: 20px;
+    background-color: white;
 
     li {
         flex-shrink: 0;
-        margin-left: 8px;
+        margin-left: 15px;
     }
 `;
 
@@ -85,8 +96,6 @@ function NewPost(props) {
 
     async function onPostButtonClicked() {
         const db = getFirestore();
-
-        console.log('posting...');
 
         const postId = uniqid();
         await setDoc(doc(db, `users/${currentUser.uid}/posts/${postId}`), {
@@ -110,8 +119,6 @@ function NewPost(props) {
     }
 
     function removeTag(tag) {
-        console.log('removing tag');
-
         setPostTags((prevState) => {
             const newState = [...prevState];
             const tagIndex = newState.indexOf(tag);

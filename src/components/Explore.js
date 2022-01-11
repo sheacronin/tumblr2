@@ -34,8 +34,6 @@ function Explore(props) {
                 });
             }
 
-            console.log(posts);
-
             return posts;
         }
     }, []);

@@ -34,7 +34,6 @@ import Search from './components/Search';
 function App(props) {
     const { className } = props;
     const [currentUser, setCurrentUser] = useState(null);
-    console.log('current user', currentUser);
 
     const [isSidebarShowing, setIsSidebarShowing] = useState(false);
     const [followedUsers, setFollowedUsers] = useState([]);

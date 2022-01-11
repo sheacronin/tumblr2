@@ -57,8 +57,6 @@ function BlogPage(props) {
     const [blogPosts, setBlogPosts] = useState([]);
     const [isEditable, setIsEditable] = useState(false);
 
-    console.log(followedUsers);
-
     useEffect(() => {
         getUserByBlogName().then((user) => {
             setBlogOwner(user);
