@@ -42,6 +42,12 @@ const Button = styled.button`
     color: rgba(0, 0, 0, 0.65);
 `;
 
+const TagsContainer = styled.div`
+    a {
+        text-decoration: none;
+    }
+`;
+
 const PostTag = styled.span`
     color: rgba(0, 0, 0, 0.65);
     margin-right: 11px;
@@ -127,10 +133,14 @@ function Post(props) {
                 />
             )}
             <PostContent>{post.content}</PostContent>
-            <div>
+            <TagsContainer>
                 {post.tags &&
-                    post.tags.map((tag) => <PostTag key={tag}>#{tag}</PostTag>)}
-            </div>
+                    post.tags.map((tag) => (
+                        <Link to={`/search/${tag}`} key={tag}>
+                            <PostTag>#{tag}</PostTag>{' '}
+                        </Link>
+                    ))}
+            </TagsContainer>
             <PostFooter>
                 <Button
                     notes

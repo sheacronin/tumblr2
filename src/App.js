@@ -29,6 +29,7 @@ import {
 } from 'firebase/firestore';
 import Likes from './components/Likes';
 import Activity from './components/Activity';
+import Search from './components/Search';
 
 function App(props) {
     const { className } = props;
@@ -161,6 +162,16 @@ function App(props) {
                     <Route
                         path="/reblog/:originalPostId"
                         element={<ReblogPost currentUser={currentUser} />}
+                    />
+                    <Route
+                        path="/search/:tag"
+                        element={
+                            <Search
+                                currentUser={currentUser}
+                                followedUsers={followedUsers}
+                                followUser={followUser}
+                            />
+                        }
                     />
                 </Routes>
             </div>
